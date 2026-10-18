@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cortez — IA Viral de Vídeos Verticais</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0B0D17;
+      --card-bg: #121526;
+      --accent-violet: #7C3AED;
+      --accent-amber: #F59E0B;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: #E2E8F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+      user-select: none;
+    }
+    .glass-panel {
+      background: rgba(18, 21, 38, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+    }
+    .gold-gradient {
+      background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+    }
+    .violet-gradient {
+      background: linear-gradient(135deg, #7C3AED 0%, #9333EA 100%);
+    }
+    .text-gold {
+      color: #FBBF24;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="flex flex-col h-screen max-w-md mx-auto relative border-x border-purple-900/20">
+
+  <!-- Header -->
+  <header class="p-4 flex justify-between items-center bg-slate-950/80 backdrop-blur border-b border-purple-900/30 sticky top-0 z-50">
+    <div class="flex items-center space-x-2">
+      <div class="w-9 h-9 rounded-xl violet-gradient flex items-center justify-center font-bold text-white shadow-lg shadow-purple-900/50">
+        C
+      </div>
+      <span class="font-black text-xl tracking-wider text-white">CORTEZ</span>
+    </div>
+    <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
+      IA DeepTech
+    </span>
+  </header>
+
+  <!-- Conteúdo Principal / Abas -->
+  <main class="flex-1 overflow-y-auto hide-scrollbar pb-20">
+    
+    <!-- ABA: CRIAR COM IA (Padrão) -->
+    <section id="tab-create" class="p-4 space-y-6">
+      <div class="glass-panel p-5 rounded-2xl space-y-4">
+        <div class="space-y-1">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid font-black fa-wand-magic-sparkles text-amber-400"></i> Cortar Podcast / Vídeo
+          </h2>
+          <p class="text-xs text-slate-400">Cole o link do vídeo longo. A IA identificará os melhores momentos automaticamente.</p>
+        </div>
+
+        <div class="space-y-3">
+          <label class="text-xs font-semibold text-slate-300">URL do Vídeo ou Podcast</label>
+          <input type="text" id="video-url" placeholder="https://youtube.com/watch?v=..." class="w-full bg-slate-900 border border-purple-800/40 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
+        </div>
+
+        <button onclick="processVideo()" class="w-full py-3 rounded-xl font-bold text-slate-950 gold-gradient shadow-lg shadow-amber-500/20 flex items-center justify-center space-x-2 active:scale-95 transition">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Analisar e Selecionar Cortes</span>
+        </button>
+      </div>
+
+      <!-- Status do Processamento -->
+      <div id="ai-status" class="hidden glass-panel p-4 rounded-xl border border-amber-500/30 space-y-2 text-center">
+        <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-amber-400 border-t-transparent"></div>
+        <p class="text-xs font-semibold text-amber-300" id="status-text">Processando áudio e transcrevendo com IA...</p>
+      </div>
+
+      <!-- Lista de Cortes Gerados -->
+      <div id="cuts-results" class="space-y-4 hidden">
+        <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider">Cortes Recomendados pela IA</h3>
+        
+        <!-- Cartão de Corte 1 -->
+        <div class="glass-panel p-4 rounded-xl space-y-3">
+          <div class="flex justify-between items-center text-xs">
+            <span class="bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded font-mono">08:12 - 08:52</span>
+            <span class="text-amber-400 font-bold"><i class="fa-solid fa-fire"></i> 99% Score Viral</span>
+          </div>
+          <h4 class="font-bold text-white text-sm">O Ponto de Virada no Mercado (Polémicas)</h4>
+          <p class="text-xs text-slate-400 italic">"Se você não construir o seu próprio sonho, alguém vai te contratar para construir o dele."</p>
+          <button onclick="publishCut('O Ponto de Virada no Mercado', '08:12 - 08:52')" class="w-full py-2 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white transition">
+            Publicar este Corte no Feed
+          </button>
+        </div>
+
+        <!-- Cartão de Corte 2 -->
+        <div class="glass-panel p-4 rounded-xl space-y-3">
+          <div class="flex justify-between items-center text-xs">
+            <span class="bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded font-mono">21:40 - 22:25</span>
+            <span class="text-amber-400 font-bold"><i class="fa-solid fa-fire"></i> 96% Score Viral</span>
+          </div>
+          <h4 class="font-bold text-white text-sm">A Revelação sobre Estratégia de IA</h4>
+          <p class="text-xs text-slate-400 italic">"O erro da maioria é tentar fazer tudo manualmente quando a automação já resolve 90%."</p>
+          <button onclick="publishCut('A Revelação sobre Estratégia de IA', '21:40 - 22:25')" class="w-full py-2 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white transition">
+            Publicar este Corte no Feed
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA: FEED VERTICAL -->
+    <section id="tab-feed" class="hidden p-4 space-y-4">
+      <div id="feed-container" class="space-y-4">
+        <div class="glass-panel p-4 rounded-2xl space-y-3 border-amber-500/40">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs text-white">IA</div>
+            <div>
+              <p class="text-xs font-bold text-white">Cortez AI Official</p>
+              <p class="text-[10px] text-slate-400">Publicado há pouco</p>
+            </div>
+          </div>
+          <div class="h-64 rounded-xl bg-slate-900 flex flex-col items-center justify-center p-4 text-center border border-purple-900/30">
+            <i class="fa-solid fa-clapperboard text-4xl text-purple-500 mb-2"></i>
+            <p class="text-xs text-slate-300 font-semibold">Corte Selecionado por IA</p>
+            <p class="text-[11px] text-slate-500 mt-1">Pronto para visualização vertical 9:16</p>
+          </div>
+          <div class="flex justify-between items-center pt-1 text-xs text-slate-400">
+            <button class="flex items-center space-x-1 hover:text-amber-400"><i class="fa-regular fa-heart"></i> <span>1.2k</span></button>
+            <button class="flex items-center space-x-1 hover:text-amber-400"><i class="fa-regular fa-comment"></i> <span>84</span></button>
+            <button class="flex items-center space-x-1 hover:text-amber-400"><i class="fa-solid fa-share"></i> <span>Partilhar</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Navegação Inferior Móvel -->
+  <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-950/95 border-t border-purple-900/30 flex justify-around p-3 z-50">
+    <button onclick="switchTab('feed')" id="nav-feed" class="flex flex-col items-center text-slate-400 text-xs">
+      <i class="fa-solid fa-compass text-lg mb-0.5"></i> Feed
+    </button>
+    <button onclick="switchTab('create')" id="nav-create" class="flex flex-col items-center text-amber-400 text-xs font-bold">
+      <i class="fa-solid fa-wand-magic-sparkles text-lg mb-0.5"></i> Criar IA
+    </button>
+  </nav>
+
+  <script>
+    function switchTab(tab) {
+      document.getElementById('tab-create').classList.add('hidden');
+      document.getElementById('tab-feed').classList.add('hidden');
+      document.getElementById('nav-create').className = "flex flex-col items-center text-slate-400 text-xs";
+      document.getElementById('nav-feed').className = "flex flex-col items-center text-slate-400 text-xs";
+
+      if(tab === 'create') {
+        document.getElementById('tab-create').classList.remove('hidden');
+        document.getElementById('nav-create').className = "flex flex-col items-center text-amber-400 text-xs font-bold";
+      } else {
+        document.getElementById('tab-feed').classList.remove('hidden');
+        document.getElementById('nav-feed').className = "flex flex-col items-center text-amber-400 text-xs font-bold";
+      }
+    }
+
+    function processVideo() {
+      const url = document.getElementById('video-url').value;
+      if(!url) {
+        alert('Por favor, insira um link de vídeo/podcast.');
+        return;
+      }
+      
+      const status = document.getElementById('ai-status');
+      const results = document.getElementById('cuts-results');
+      status.classList.remove('hidden');
+      results.classList.add('hidden');
+
+      setTimeout(() => {
+        document.getElementById('status-text').innerText = "Analisando minutagens e selecionando ganchos virais...";
+      }, 1500);
+
+      setTimeout(() => {
+        status.classList.add('hidden');
+        results.classList.remove('hidden');
+      }, 3000);
+    }
+
+    function publishCut(title, timestamp) {
+      const feed = document.getElementById('feed-container');
+      const newPost = document.createElement('div');
+      newPost.className = "glass-panel p-4 rounded-2xl space-y-3 border-amber-500/40 animate-fade-in";
+      newPost.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs text-white">EU</div>
+          <div>
+            <p class="text-xs font-bold text-white">${title}</p>
+            <p class="text-[10px] text-amber-400">Minutagem: ${timestamp}</p>
+          </div>
+        </div>
+        <div class="h-64 rounded-xl bg-purple-950/40 flex flex-col items-center justify-center p-4 text-center border border-amber-500/30">
+          <i class="fa-solid fa-circle-play text-4xl text-amber-400 mb-2"></i>
+          <p class="text-xs text-white font-bold">Corte Publicado com Sucesso</p>
+        </div>
+      `;
+      feed.prepend(newPost);
+      switchTab('feed');
+    }
+  </script>
+</body>
+</html>
